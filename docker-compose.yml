@@ -1,0 +1,26 @@
+services:
+  api:
+    container_name: clon_tinder
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      APP_PORT: 4000
+      MONGODB_URI: mongodb+srv://juanesmontoya92:tdea@electiva2.zd1g5.mongodb.net/clon_tinder
+      JWT_SECRET: anysecret
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo_db
+
+  mongo_db:
+    container_name: clon_tinder-mongo_db
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data: {}
