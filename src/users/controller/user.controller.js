@@ -26,7 +26,7 @@ export const createUser = async (req, res = response) => {
 }
 
 export const updateUser = async (req, res = response) => {
-
+    //El BICHOOOOOOOO
 }
 
 export const loginUser = async (req, res = response) => {
