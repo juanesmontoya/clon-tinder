@@ -86,3 +86,20 @@ export const logoutUser = async (req, res = response) => {
         message: 'User logged out successfully'
     });
 }
+
+export const getUser = async (req, res = response) => {
+    //todo get user by email
+}
+
+export const getAllUsers = async (req, res = response) => {
+    try {
+        const users = await User.find();
+        return res.status(200).json({
+            ok: true,
+            message: 'Users found',
+            users
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
