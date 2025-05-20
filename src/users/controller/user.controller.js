@@ -2,12 +2,12 @@ import User from '../model/user.model.js';
 import { response } from 'express';
 
 export const createUser = async (req, res = response) => {
-    const { name, age, genre, preferences, ubicacion, fotoPerfil, password } = req.body;
+    const { name, age, email, genre, preferences, ubicacion, fotoPerfil, password } = req.body;
 
     try {
-        const user = new User({ name, age, genre, preferences, ubicacion, fotoPerfil, password });
+        const user = new User({ name, age, email, genre, preferences, ubicacion, fotoPerfil, password });
 
-        const userExists = await User.findOne({ name: name });
+        const userExists = await User.findOne({ email: email });
 
         if (userExists) {
             return res.status(403).json({ message: 'User already exists' });
@@ -17,7 +17,7 @@ export const createUser = async (req, res = response) => {
         return res.status(201).json({
             ok: true,
             message: 'User created successfully',
-            user: user
+            user
         });
 
     } catch (error) {
@@ -26,11 +26,13 @@ export const createUser = async (req, res = response) => {
 }
 
 export const updateUser = async (req, res = response) => {
-    const { name, age, genre, preferences, ubicacion, fotoPerfil, password } = req.body;
+    const { name, age, email, genre, preferences, ubicacion, fotoPerfil, password } = req.body;
 
     try {
 
-        const userExists = await User.findOne({ name: name });
+        const user = new User({ name, age, email, genre, preferences, ubicacion, fotoPerfil, password });
+
+        const userExists = await User.findOne({ email: email });
 
         if (userExists) {
             return res.status(403).json({ message: 'User already exists' });
@@ -49,10 +51,10 @@ export const updateUser = async (req, res = response) => {
 }
 
 export const loginUser = async (req, res = response) => {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
     try {
 
-        const user = await User.findOne({ name: name });
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(403).json({ 
                 ok: false,
@@ -70,7 +72,7 @@ export const loginUser = async (req, res = response) => {
         return res.status(200).json({
             ok: true,
             message: 'User logged in successfully',
-            user: user
+            user
         });
 
     } catch (error) {
