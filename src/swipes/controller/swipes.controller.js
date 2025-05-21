@@ -2,20 +2,56 @@ import Swipe from "../model/swipes.model.js";
 import { response } from "express";
 import User from "../../users/model/user.model.js";
 
-export const createSwipe = async (req, res = response) => {
-  const { email } = req.body;
+async function createSwipe (origin_id, fate_id, action) {
 
-  const originUser = await User.findOne({ email: email });
-  const fateUser = await validateFate(email);
+  const swipe = new Swipe({
+    user_og_id: origin_id,
+    user_fate_id: fate_id,
+    action: action,
+  });
 
-  console.log("Origin User: ", originUser.email);
-  console.log("Fate User: ", fateUser.email);
+  await swipe.save();
+};
+
+export const swipeLike = async (req, res = response) => {
+  const { origin_email, fate_email } = req.body;
+
+  const originUser = await User.findOne({ email: origin_email });
+  const fateUser = await User.findOne({ email: fate_email });
+
+  createSwipe(originUser._id, fateUser._id, "like");
 
   return res.status(200).json({
     ok: true,
-    message: "Swipe created successfully",
+    message: "Liked"
   });
-};
+}
+
+export const swipeDislike = async (req, res = response) => {
+  const { origin_email, fate_email } = req.body;
+
+  const originUser = await User.findOne({ email: origin_email });
+  const fateUser = await User.findOne({ email: fate_email });
+
+  createSwipe(originUser._id, fateUser._id, "dislike");
+
+  return res.status(200).json({
+    ok: true,
+    message: "Disliked"
+  });
+}
+
+export const getNewPerson = async (req, res = response) => {
+  const { email } = req.body;
+
+  const fateUser = await validateFate(email);
+  
+  return res.status(200).json({
+    ok: true,
+    message: "New person found",
+    fateUser
+  });
+}
 
 async function validateFate(email) {
   var fateUser = await randomFate();
