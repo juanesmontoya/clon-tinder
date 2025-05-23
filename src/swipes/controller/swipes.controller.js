@@ -1,6 +1,7 @@
 import Swipe from "../model/swipes.model.js";
 import { response } from "express";
 import User from "../../users/model/user.model.js";
+import { createMatch } from "../../matches/controller/matches.controller.js";
 
 async function createSwipe (origin_id, fate_id, action) {
 
@@ -21,9 +22,12 @@ export const swipeLike = async (req, res = response) => {
 
   createSwipe(originUser._id, fateUser._id, "like");
 
+  const isMatch = createMatch(originUser.email, fateUser.email);
+
   return res.status(200).json({
     ok: true,
-    message: "Liked"
+    message: "Liked",
+    isMatch: isMatch,
   });
 }
 
